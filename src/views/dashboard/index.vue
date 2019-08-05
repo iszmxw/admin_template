@@ -83,6 +83,53 @@
         </div>
       </el-col>
     </el-row>
+
+    <el-row :gutter="8">
+      <el-col style="padding-right:8px;margin-bottom:30px;">
+        <el-table
+          :data="list"
+          style="width: 100%;padding-top: 15px;"
+        >
+          <el-table-column
+            label="id"
+            align="center"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.id }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="IP"
+            align="center"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.ip }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="实际地址"
+            align="center"
+          >
+            <template slot-scope="{row}">
+              <el-tag :type="row.address">
+                {{ row.address }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="登录时间"
+            align="center"
+          >
+            <template slot-scope="{row}">
+              <el-tag :type="row.created_at">
+                {{ row.created_at }}
+              </el-tag>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+
   </div>
 </template>
 
@@ -90,6 +137,40 @@
 import CountTo from 'vue-count-to'
 
 export default {
+  data() {
+    return {
+      list: [{
+        id: 1,
+        ip: '192.168.1.1',
+        address: '广东省深圳市',
+        created_at: '2109年08月05日'
+      },
+      {
+        id: 2,
+        ip: '192.168.1.1',
+        address: '广东省深圳市',
+        created_at: '2109年08月05日'
+      },
+      {
+        id: 3,
+        ip: '192.168.1.1',
+        address: '广东省深圳市',
+        created_at: '2109年08月05日'
+      },
+      {
+        id: 4,
+        ip: '192.168.1.1',
+        address: '广东省深圳市',
+        created_at: '2109年08月05日'
+      },
+      {
+        id: 5,
+        ip: '192.168.1.1',
+        address: '广东省深圳市',
+        created_at: '2109年08月05日'
+      }]
+    }
+  },
   components: {
     CountTo
   },
