@@ -85,7 +85,35 @@
     </el-row>
 
     <el-row :gutter="8">
-      <el-col style="padding-right:8px;margin-bottom:30px;">
+      <el-col
+        style="padding-right:8px;margin-bottom:30px;"
+        :lg="12"
+      >
+        <el-card class="box-card">
+          <div
+            slot="header"
+            class="clearfix"
+          >
+            <span>系统信息</span>
+          </div>
+          <div>
+            <span>操作系统： Linux</span>
+            <el-divider />
+            <span>PHP版本：7.2</span>
+            <el-divider />
+            <span>服务器域名/IP：127.0.0.1</span>
+            <span>PHP版本：7.2</span>
+            <el-divider />
+            <span>服务器环境：nginx/1.12.2</span>
+            <el-divider />
+            <span>程序版本：ThinkPHP5.0</span>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col
+        style="padding-right:8px;margin-bottom:30px;"
+        :lg="12"
+      >
         <el-table
           :data="list"
           style="width: 100%;padding-top: 15px;"
