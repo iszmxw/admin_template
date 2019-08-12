@@ -48,7 +48,7 @@ export default {
         matched = [{
           path: '/',
           meta: {
-            title: '系统管理'
+            title: '主页'
           }
         }].concat(matched)
       }
