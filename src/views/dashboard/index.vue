@@ -137,6 +137,9 @@
 import CountTo from 'vue-count-to'
 
 export default {
+  components: {
+    CountTo
+  },
   data() {
     return {
       list: [{
@@ -168,11 +171,38 @@ export default {
         ip: '192.168.1.1',
         address: '广东省深圳市',
         created_at: '2109年08月05日'
+      },
+      {
+        id: 6,
+        ip: '192.168.1.1',
+        address: '广东省深圳市',
+        created_at: '2109年08月05日'
+      },
+      {
+        id: 7,
+        ip: '192.168.1.1',
+        address: '广东省深圳市',
+        created_at: '2109年08月05日'
+      },
+      {
+        id: 8,
+        ip: '192.168.1.1',
+        address: '广东省深圳市',
+        created_at: '2109年08月05日'
+      },
+      {
+        id: 9,
+        ip: '192.168.1.1',
+        address: '广东省深圳市',
+        created_at: '2109年08月05日'
+      },
+      {
+        id: 10,
+        ip: '192.168.1.1',
+        address: '广东省深圳市',
+        created_at: '2109年08月05日'
       }]
     }
-  },
-  components: {
-    CountTo
   },
   methods: {
   }
