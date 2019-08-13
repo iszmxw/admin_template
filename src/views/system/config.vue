@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       form: {
-        site_name: '追梦小窝的博客as',
+        site_name: '追梦小窝的博客',
         desc: '副标题',
         site_url: 'http://blog.54zm.com',
         icp: 'http://blog.54zm.com',
