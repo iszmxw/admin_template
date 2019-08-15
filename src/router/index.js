@@ -54,7 +54,6 @@ export const constantRoutes = [
       meta: { title: '系统首页', icon: 'dashboard' }
     }]
   },
-
   {
     path: '/system',
     component: Layout,
@@ -73,6 +72,27 @@ export const constantRoutes = [
         name: 'view_log',
         component: () => import('@/views/system/view_log'),
         meta: { title: '访客记录' }
+      }
+    ]
+  },
+  {
+    path: '/category',
+    component: Layout,
+    redirect: '/category/category_list',
+    name: 'category',
+    meta: { title: '栏目管理', icon: 'nested' },
+    children: [
+      {
+        path: 'category_list',
+        name: 'category_list',
+        component: () => import('@/views/category/category_list'),
+        meta: { title: '栏目列表' }
+      },
+      {
+        path: 'navbar_list',
+        name: 'navbar_list',
+        component: () => import('@/views/category/navbar_list'),
+        meta: { title: '导航列表' }
       }
     ]
   },
