@@ -16,7 +16,6 @@
           prop="id"
           label="ID"
         />
-
         <el-table-column label="分类名称">
           <template slot-scope="scope">
             <el-tag>
