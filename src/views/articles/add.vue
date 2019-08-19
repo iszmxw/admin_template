@@ -17,7 +17,7 @@
                 <el-input v-model="postForm.title" placeholder="请输入标题" />
               </el-form-item>
               <el-form-item prop="content" style="margin-bottom: 30px;">
-                <Tinymce ref="editor" v-model="postForm.content" :height="400" />
+                <!-- <Tinymce ref="editor" v-model="postForm.content" :height="400" /> -->
               </el-form-item>
               <el-form-item style="text-align:center">
                 <el-button type="warning" @click="handlecreate(0)">保存草稿</el-button>
@@ -32,11 +32,11 @@
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce'
+// import Tinymce from '@/components/Tinymce'
 import { addData } from '@/api/articles'
 
 export default {
-  components: { Tinymce },
+  // components: { Tinymce },
   data() {
     return {
       postForm: {
