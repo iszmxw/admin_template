@@ -96,6 +96,33 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/articles',
+    component: Layout,
+    redirect: '/articles/list',
+    name: 'category',
+    meta: { title: '文章管理', icon: 'form' },
+    children: [
+      {
+        path: 'list',
+        name: 'list',
+        component: () => import('@/views/articles/list'),
+        meta: { title: '文章列表' }
+      },
+      {
+        path: 'add',
+        name: 'add',
+        component: () => import('@/views/articles/add'),
+        meta: { title: '撰写文章' }
+      },
+      {
+        path: 'edit',
+        name: 'edit',
+        component: () => import('@/views/articles/edit'),
+        meta: { title: '编辑文章' }
+      }
+    ]
+  },
 
   {
     path: '/form',
