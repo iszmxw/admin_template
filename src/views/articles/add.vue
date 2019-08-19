@@ -5,7 +5,7 @@
         <div slot="header" class="clearfix">
           <span style="float:left">添加文档</span>
           <span style="float:right">
-            <router-link to="/hifans/help/help_list">
+            <router-link to="/articles/list">
               <el-button type="primary">返回列表</el-button>
             </router-link>
           </span>
