@@ -119,88 +119,53 @@ export const constantRoutes = [
         path: 'edit',
         name: 'edit',
         component: () => import('@/views/articles/edit'),
-        meta: { title: '编辑文章' }
+        meta: { title: '编辑文章' },
+        hidden: true
       }
     ]
   },
 
   {
-    path: '/form',
+    path: '/serve',
     component: Layout,
+    redirect: '/serve/link_list',
+    name: 'serve',
+    meta: { title: '云拓展', icon: 'international' },
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: '表单', icon: 'form' }
-      }
-    ]
-  },
-
-  {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
+        path: 'link_list',
+        name: 'link_list',
+        component: () => import('@/views/serve/link_list'),
+        meta: { title: '友情链接' }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
+        path: 'tag_list',
+        name: 'tag_list',
+        component: () => import('@/views/serve/tag_list'),
+        meta: { title: '标签列表' }
+      },
+      {
+        path: 'comment_list',
+        name: 'comment_list',
+        component: () => import('@/views/serve/comment_list'),
+        meta: { title: '评论列表' }
+      },
+      {
+        path: 'twitter_list',
+        name: 'twitter_list',
+        component: () => import('@/views/serve/twitter_list'),
+        meta: { title: '说说列表' }
       }
     ]
   },
+
   {
     path: 'external-link',
     component: Layout,
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: '外部连接', icon: 'link' }
+        path: 'http://blog.54zm.com/',
+        meta: { title: '访问首页', icon: 'link' }
       }
     ]
   },
