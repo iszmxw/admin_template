@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getData(params) {
+export function getCategory(params) {
   return request({
-    url: '/dashboard/index',
+    url: '/category/category_list',
     method: 'post',
     params
   })

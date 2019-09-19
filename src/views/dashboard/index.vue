@@ -23,8 +23,8 @@
             </div>
             <count-to
               :start-val="0"
-              :end-val="102400"
-              :duration="2600"
+              :end-val="blog_num"
+              :duration="5000"
               class="card-panel-num"
             />
           </div>
@@ -49,8 +49,8 @@
             </div>
             <count-to
               :start-val="0"
-              :end-val="81212"
-              :duration="3000"
+              :end-val="comment_num"
+              :duration="5000"
               class="card-panel-num"
             />
           </div>
@@ -75,8 +75,8 @@
             </div>
             <count-to
               :start-val="0"
-              :end-val="9280"
-              :duration="3200"
+              :end-val="twitter_num"
+              :duration="5000"
               class="card-panel-num"
             />
           </div>
@@ -89,33 +89,8 @@
         style="padding-right:8px;margin-bottom:30px;"
         :lg="12"
       >
-        <el-card class="box-card">
-          <div
-            slot="header"
-            class="clearfix"
-          >
-            <span>系统信息</span>
-          </div>
-          <div>
-            <span>操作系统： Linux</span>
-            <el-divider />
-            <span>PHP版本：7.2</span>
-            <el-divider />
-            <span>服务器域名/IP：127.0.0.1</span>
-            <span>PHP版本：7.2</span>
-            <el-divider />
-            <span>服务器环境：nginx/1.12.2</span>
-            <el-divider />
-            <span>程序版本：ThinkPHP5.0</span>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col
-        style="padding-right:8px;margin-bottom:30px;"
-        :lg="12"
-      >
         <el-table
-          :data="list"
+          :data="login_log"
           style="width: 100%;padding-top: 15px;"
         >
           <el-table-column
@@ -155,6 +130,39 @@
             </template>
           </el-table-column>
         </el-table>
+        <!-- 分页 -->
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="listQuery.page"
+          :limit.sync="listQuery.limit"
+          @pagination="getData"
+        />
+      </el-col>
+
+      <el-col
+        style="padding-right:8px;margin-bottom:30px;"
+        :lg="12"
+      >
+        <el-card class="box-card">
+          <div
+            slot="header"
+            class="clearfix"
+          >
+            <span>系统信息</span>
+          </div>
+          <div>
+            <span>操作系统： {{ system }}</span>
+            <el-divider />
+            <span>PHP版本：{{ php }}</span>
+            <el-divider />
+            <span>服务器环境：{{ serve }}</span>
+            <el-divider />
+            <span>服务器域名/IP：{{ serve_name }}</span>
+            <el-divider />
+            <span>程序版本：ThinkPHP{{ tp_version }}</span>
+          </div>
+        </el-card>
       </el-col>
     </el-row>
 
@@ -163,76 +171,52 @@
 
 <script>
 import CountTo from 'vue-count-to'
+import { getData } from '@/api/dashboard'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
   components: {
-    CountTo
+    CountTo,
+    Pagination
   },
   data() {
     return {
-      list: [{
-        id: 1,
-        ip: '192.168.1.1',
-        address: '广东省深圳市',
-        created_at: '2109年08月05日'
+      total: 0,
+      listQuery: {
+        page: 1,
+        limit: 10
       },
-      {
-        id: 2,
-        ip: '192.168.1.1',
-        address: '广东省深圳市',
-        created_at: '2109年08月05日'
-      },
-      {
-        id: 3,
-        ip: '192.168.1.1',
-        address: '广东省深圳市',
-        created_at: '2109年08月05日'
-      },
-      {
-        id: 4,
-        ip: '192.168.1.1',
-        address: '广东省深圳市',
-        created_at: '2109年08月05日'
-      },
-      {
-        id: 5,
-        ip: '192.168.1.1',
-        address: '广东省深圳市',
-        created_at: '2109年08月05日'
-      },
-      {
-        id: 6,
-        ip: '192.168.1.1',
-        address: '广东省深圳市',
-        created_at: '2109年08月05日'
-      },
-      {
-        id: 7,
-        ip: '192.168.1.1',
-        address: '广东省深圳市',
-        created_at: '2109年08月05日'
-      },
-      {
-        id: 8,
-        ip: '192.168.1.1',
-        address: '广东省深圳市',
-        created_at: '2109年08月05日'
-      },
-      {
-        id: 9,
-        ip: '192.168.1.1',
-        address: '广东省深圳市',
-        created_at: '2109年08月05日'
-      },
-      {
-        id: 10,
-        ip: '192.168.1.1',
-        address: '广东省深圳市',
-        created_at: '2109年08月05日'
-      }]
+      blog_num: 0,
+      comment_num: 0,
+      twitter_num: 0,
+      system: null,
+      php: null,
+      serve: null,
+      serve_name: null,
+      tp_version: null,
+      login_log: []
     }
   },
+  mounted() {
+    this.getData()
+  },
   methods: {
+    getData() {
+      getData(this.listQuery).then(res => {
+        if (res.code === 200) {
+          this.blog_num = res.data.blog_num
+          this.comment_num = res.data.comment_num
+          this.twitter_num = res.data.twitter_num
+          this.system = res.data.system
+          this.php = res.data.php
+          this.serve = res.data.serve
+          this.serve_name = res.data.serve_name
+          this.tp_version = res.data.tp_version
+          this.login_log = res.data.login_log.data
+          this.total = res.data.login_log.total
+        }
+      })
+    }
   }
 }
 </script>

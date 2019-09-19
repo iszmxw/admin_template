@@ -11,10 +11,10 @@
         class="form"
       >
         <el-form-item label="站点标题">
-          <el-input v-model="form.site_name" />
+          <el-input v-model="form.site_title" />
         </el-form-item>
         <el-form-item label="站点副标题：">
-          <el-input v-model="form.desc" />
+          <el-input v-model="form.site_description" />
         </el-form-item>
         <el-form-item label="站点地址：">
           <el-input v-model="form.site_url" />
@@ -24,7 +24,7 @@
         </el-form-item>
         <el-form-item label="首页底部信息：">
           <el-input
-            v-model="form.footer"
+            v-model="form.footer_info"
             type="textarea"
             rows="10"
           />
@@ -41,21 +41,35 @@
 </template>
 
 <script>
+import { config, save_config } from '@/api/system'
+
 export default {
   data() {
     return {
-      form: {
-        site_name: '追梦小窝的博客',
-        desc: '副标题',
-        site_url: 'http://blog.54zm.com',
-        icp: 'http://blog.54zm.com',
-        footer: 'http://blog.54zm.com'
-      }
+      form: {}
     }
   },
+  mounted() {
+    this.getData()
+  },
   methods: {
+    getData() {
+      config().then(res => {
+        if (res.code === 200) {
+          this.form = res.data
+        }
+      })
+    },
     onSubmit() {
-      console.log('submit!')
+      save_config(this.form).then(res => {
+        if (res.code === 200) {
+          this.$notify({
+            title: '提示',
+            message: res.message,
+            type: 'success'
+          })
+        }
+      })
     }
   }
 }
