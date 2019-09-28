@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
-export function getData(params) {
+export function getArticleList(data) {
   return request({
-    url: '/dashboard/index',
+    url: '/article/article_list',
     method: 'post',
-    params
+    data
   })
 }

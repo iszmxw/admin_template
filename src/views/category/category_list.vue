@@ -6,6 +6,12 @@
         class="clearfix"
       >
         <span>栏目列表</span>
+        <span style="float:right">
+          <el-button
+            type="primary"
+            @click="DialogVisible = true"
+          >添加栏目</el-button>
+        </span>
       </div>
       <el-table :data="tableData">
         <el-table-column
@@ -36,21 +42,21 @@
         <el-table-column label="描述">
           <template slot-scope="scope">
             <el-tag>
-              {{ scope.row.desc }}
+              {{ scope.row.description }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="别名">
           <template slot-scope="scope">
             <el-tag>
-              {{ scope.row.rename }}
+              {{ scope.row.alias }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="文章">
           <template slot-scope="scope">
             <el-tag>
-              {{ scope.row.articles }}
+              {{ scope.row.article_num }}
             </el-tag>
           </template>
         </el-table-column>
@@ -60,6 +66,45 @@
         </el-table-column>
       </el-table>
     </el-card>
+
+    <el-dialog
+      title="添加栏目"
+      :visible.sync="DialogVisible"
+      width="30%"
+      center
+    >
+      <el-form
+        ref="form"
+        :model="form"
+        label-width="80px"
+      >
+        <el-form-item label="名称">
+          <el-input v-model="form.name" />
+        </el-form-item>
+        <el-form-item label="上级">
+          <el-select v-model="form.pid" placeholder="请选择上级">
+            <el-option label="设置为顶级" value="0" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="form.description" />
+        </el-form-item>
+        <el-form-item label="别名">
+          <el-input v-model="form.alias" />
+        </el-form-item>
+      </el-form>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="DialogVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="onSubmit"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -68,6 +113,13 @@ import { getCategory } from '@/api/category'
 export default {
   data() {
     return {
+      DialogVisible: false,
+      form: {
+        name: '',
+        pid: '',
+        description: '',
+        alias: ''
+      },
       tableData: [{
         id: 1,
         sort: 0,
@@ -84,8 +136,13 @@ export default {
   methods: {
     getData() {
       getCategory().then(res => {
-        console.log(res)
+        if (res.code === 200) {
+          this.tableData = res.data.data
+        }
       })
+    },
+    onSubmit() {
+      console.log('submit!')
     }
   }
 }

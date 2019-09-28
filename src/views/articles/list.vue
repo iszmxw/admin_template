@@ -3,6 +3,11 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>文章列表</span>
+        <span style="float:right">
+          <router-link to="/articles/add">
+            <el-button type="primary">添加文章</el-button>
+          </router-link>
+        </span>
       </div>
       <el-table :data="tableData">
         <el-table-column
@@ -41,33 +46,46 @@
           <el-button type="danger">删除</el-button>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="listQuery.page"
+        :limit.sync="listQuery.limit"
+        @pagination="getData"
+      />
     </el-card>
   </div>
 </template>
 
 <script>
+import { getArticleList } from '@/api/articles'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 export default {
+  components: {
+    Pagination
+  },
   data() {
     return {
-      tableData: [{
-        id: 1,
-        title: 'Mysql数据库语句SHOW PROCESSLIST的作用',
-        category_name: 'WEB类',
-        views: 35,
-        created_at: '2019-08-29 10:26:14'
-      }, {
-        id: 2,
-        title: 'tp5使用laravel的dump打印插件',
-        category_name: 'Thikphp',
-        views: 28,
-        created_at: '2019-08-29 10:26:14'
-      }, {
-        id: 3,
-        title: '关于easywchat的sdk缓存问题 Credential "component_verify_ticket" does not exist in cache.',
-        category_name: 'Laravel',
-        views: 99,
-        created_at: '2019-08-29 10:26:14'
-      }]
+      total: 0,
+      listQuery: {
+        page: 1,
+        limit: 10
+      },
+      tableData: []
+    }
+  },
+  mounted() {
+    this.getData()
+  },
+  methods: {
+    getData() {
+      getArticleList(this.listQuery).then(res => {
+        if (res.code === 200) {
+          this.total = res.data.total
+          this.tableData = res.data.data
+        }
+      })
     }
   }
 }

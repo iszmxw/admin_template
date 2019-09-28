@@ -3,6 +3,9 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>导航栏列表</span>
+        <span style="float:right">
+          <el-button type="primary">添加导航</el-button>
+        </span>
       </div>
       <el-table ref="dragTable" :data="list" row-key="id" border fit highlight-current-row style="width: 100%">
         <el-table-column label="排序">
