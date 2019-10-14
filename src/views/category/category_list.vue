@@ -112,7 +112,7 @@
         <el-button @click="DialogVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="onSubmit"
+          @click="addData"
         >确 定</el-button>
       </span>
     </el-dialog>
@@ -128,10 +128,17 @@ export default {
       DialogVisible: false,
       category_list: [],
       form: {
-        name: '',
-        pid: '',
-        description: '',
-        alias: ''
+        name: undefined,
+        pid: undefined,
+        description: undefined,
+        alias: undefined
+      },
+      editForm: {
+        id: undefined,
+        name: undefined,
+        pid: undefined,
+        description: undefined,
+        alias: undefined
       },
       tableData: []
     }
@@ -150,10 +157,11 @@ export default {
       })
     },
     // 提交表单添加栏目
-    onSubmit() {
+    addData() {
       addCategory(this.form).then(res => {
         if (res.code === 200) {
           this.$message.success(res.message)
+          this.$router.go(0)
         } else {
           this.$message.error(res.message)
         }
