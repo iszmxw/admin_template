@@ -42,7 +42,7 @@
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <div class="tips">
-        <span> 请您</span>
+        <span> 请您输入后台账号密码进行登录操作</span>
       </div>
 
     </el-form>
