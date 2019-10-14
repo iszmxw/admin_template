@@ -82,8 +82,20 @@
           <el-input v-model="form.name" />
         </el-form-item>
         <el-form-item label="上级">
-          <el-select v-model="form.pid" placeholder="请选择上级">
-            <el-option label="设置为顶级" value="0" />
+          <el-select
+            v-model="form.pid"
+            placeholder="请选择上级"
+          >
+            <el-option
+              label="设置为顶级"
+              value="0"
+            />
+            <el-option
+              v-for="item in category_list"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="描述">
@@ -109,25 +121,19 @@
 </template>
 
 <script>
-import { getCategory } from '@/api/category'
+import { getCategory, addCategory } from '@/api/category'
 export default {
   data() {
     return {
       DialogVisible: false,
+      category_list: [],
       form: {
         name: '',
         pid: '',
         description: '',
         alias: ''
       },
-      tableData: [{
-        id: 1,
-        sort: 0,
-        name: '随笔日记',
-        desc: '前端笔记，网络笔记',
-        rename: 'suibi',
-        articles: 35
-      }]
+      tableData: []
     }
   },
   mounted() {
@@ -137,12 +143,21 @@ export default {
     getData() {
       getCategory().then(res => {
         if (res.code === 200) {
+          this.category_list = res.data.data
+          console.log(this.category_list)
           this.tableData = res.data.data
         }
       })
     },
+    // 提交表单添加栏目
     onSubmit() {
-      console.log('submit!')
+      addCategory(this.form).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.message)
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     }
   }
 }
