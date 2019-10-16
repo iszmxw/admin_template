@@ -145,7 +145,7 @@
           >
             <el-option
               label="设置为顶级"
-              value="0"
+              :value="0"
             />
             <el-option
               v-for="item in category_list"
@@ -178,7 +178,7 @@
 </template>
 
 <script>
-import { getCategory, addCategory } from '@/api/category'
+import { getCategory, addCategory, editCategory } from '@/api/category'
 export default {
   data() {
     return {
@@ -208,8 +208,8 @@ export default {
     getData() {
       getCategory().then(res => {
         if (res.code === 200) {
-          this.category_list = res.data.data
-          this.tableData = res.data.data
+          this.category_list = res.data
+          this.tableData = res.data
         }
       })
     },
@@ -218,7 +218,8 @@ export default {
       addCategory(this.form).then(res => {
         if (res.code === 200) {
           this.$message.success(res.message)
-          this.$router.go(0)
+          this.getData()
+          this.DialogVisible = false
         } else {
           this.$message.error(res.message)
         }
@@ -235,7 +236,15 @@ export default {
     },
     // 提交编辑的数据
     editData() {
-
+      editCategory(this.editForm).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.message)
+          this.editFormDialogVisible = false
+          this.getData()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     }
   }
 }

@@ -17,3 +17,12 @@ export function addCategory(data) {
     data
   })
 }
+
+// 编辑栏目
+export function editCategory(data) {
+  return request({
+    url: '/category/category_edit',
+    method: 'post',
+    data
+  })
+}
