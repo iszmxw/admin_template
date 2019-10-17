@@ -242,7 +242,7 @@ export default {
               type: 'success',
               message: res.message
             })
-            this.getCategory()
+            this.getData()
           } else {
             this.$message({
               type: 'error',
