@@ -66,7 +66,10 @@
               type="primary"
               @click="getEditModal(scope.row)"
             >编辑</el-button>
-            <el-button type="danger">删除</el-button>
+            <el-button
+              type="danger"
+              @click="deleteData(scope.row.id)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -178,7 +181,7 @@
 </template>
 
 <script>
-import { getCategory, addCategory, editCategory } from '@/api/category'
+import { getCategory, addCategory, deleteCategory, editCategory } from '@/api/category'
 export default {
   data() {
     return {
@@ -223,6 +226,34 @@ export default {
         } else {
           this.$message.error(res.message)
         }
+      })
+    },
+    deleteData(id) {
+      this.$confirm('确定要删除了吗, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteCategory({
+          id: id
+        }).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              type: 'success',
+              message: res.message
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.message
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     // 获取编辑模态框

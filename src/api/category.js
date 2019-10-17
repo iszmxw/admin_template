@@ -18,6 +18,15 @@ export function addCategory(data) {
   })
 }
 
+// 删除栏目
+export function deleteCategory(data) {
+  return request({
+    url: '/category/category_delete',
+    method: 'post',
+    data
+  })
+}
+
 // 编辑栏目
 export function editCategory(data) {
   return request({
