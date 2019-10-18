@@ -9,6 +9,15 @@ export function getNavbar(params) {
   })
 }
 
+// 导航栏排序
+export function NavbarSort(data) {
+  return request({
+    url: '/navbar/navbar_sort',
+    method: 'post',
+    data
+  })
+}
+
 // 添加导航栏
 export function addNavbar(data) {
   return request({

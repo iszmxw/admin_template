@@ -47,40 +47,71 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="导航栏图标">
+        <el-table-column label="导航栏icon图标">
           <template slot-scope="scope">
-            <el-tag>
+            <el-tag v-if="scope.row.navbar_icon">
               {{ scope.row.navbar_icon }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="是否显示">
           <template slot-scope="scope">
-            <el-tag>
-              {{ scope.row.hide }}
+            <el-tag
+              v-if="scope.row.show === 0"
+              type="info"
+            >
+              隐藏
+            </el-tag>
+            <el-tag
+              v-if="scope.row.show === 1"
+              type="success"
+            >
+              显示
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="是否新窗口打开">
           <template slot-scope="scope">
-            <el-tag>
-              {{ scope.row.new_tab }}
+            <el-tag
+              v-if="scope.row.new_tab === 0"
+              type="info"
+            >
+              否
+            </el-tag>
+            <el-tag
+              v-if="scope.row.new_tab === 1"
+              type="success"
+            >
+              是
             </el-tag>
           </template>
         </el-table-column>
-        </el-table-column>
         <el-table-column label="是否栏目">
           <template slot-scope="scope">
-            <el-tag>
-              {{ scope.row.type }}
+            <el-tag
+              v-if="scope.row.type === 1"
+              type="success"
+            >
+              系统栏目
+            </el-tag>
+            <el-tag
+              v-if="scope.row.type === 2"
+              type="danger"
+            >
+              网址链接
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="查看地址">
           <template slot-scope="scope">
-            <el-tag>
-              {{ scope.row.url }}
-            </el-tag>
+            <a
+              :href="scope.row.url"
+              target="_blank"
+            >
+              <el-tag>
+                新窗口打开
+              </el-tag>
+            </a>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -164,7 +195,7 @@
 
 <script>
 import Sortable from 'sortablejs'
-import { getNavbar, addNavbar, deleteNavbar, editNavbar } from '@/api/navbar'
+import { getNavbar, NavbarSort, addNavbar, deleteNavbar, editNavbar } from '@/api/navbar'
 export default {
   data() {
     return {
@@ -190,7 +221,7 @@ export default {
       newList: []
     }
   },
-  mounted() {
+  created() {
     this.getData()
   },
   methods: {
@@ -198,10 +229,10 @@ export default {
       getNavbar().then(res => {
         if (res.code === 200) {
           this.list = res.data
+          this.oldList = this.list.map(v => v.id)
+          this.newList = this.oldList.slice()
         }
       })
-      this.oldList = this.list.map(v => v.id)
-      this.newList = this.oldList.slice()
       this.$nextTick(() => {
         this.setSort()
       })
@@ -210,19 +241,26 @@ export default {
     setSort() {
       const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
       this.sortable = Sortable.create(el, {
-        ghostClass: 'sortable-ghost', // 放置占位符的类名称，
+        ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
         setData: function(dataTransfer) {
-          // 避免Firefox错误
+          // to avoid Firefox bug
           // Detail see : https://github.com/RubaXa/Sortable/issues/1012
           dataTransfer.setData('Text', '')
         },
         onEnd: evt => {
           const targetRow = this.list.splice(evt.oldIndex, 1)[0]
           this.list.splice(evt.newIndex, 0, targetRow)
-
-          // 为了显示更改，您可以在代码中删除
+          // for show the changes, you can delete in you code
           const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
           this.newList.splice(evt.newIndex, 0, tempIndex)
+          // 排序操作
+          NavbarSort(this.newList).then(res => {
+            if (res.code === 200) {
+              this.$message.success(res.message)
+            } else {
+              this.$message.error(res.message)
+            }
+          })
         }
       })
     },
