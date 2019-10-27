@@ -115,8 +115,13 @@
           </template>
         </el-table-column>
         <el-table-column label="操作">
-          <el-button type="primary">编辑</el-button>
-          <el-button type="danger">删除</el-button>
+          <template slot-scope="scope">
+            <el-button
+              type="primary"
+              @click="getEditModal(scope.row)"
+            >编辑</el-button>
+            <el-button type="danger">删除</el-button>
+          </template>
         </el-table-column>
         <el-table-column
           align="center"
@@ -131,12 +136,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="show-d">
-        <el-tag>默认顺序:</el-tag> {{ oldList }}
-      </div>
-      <div class="show-d">
-        <el-tag>拖拽后顺序 :</el-tag> {{ newList }}
-      </div>
     </el-card>
 
     <!-- 添加导航 -->
@@ -149,11 +148,8 @@
       <el-form
         ref="form"
         :model="addform"
-        label-width="80px"
+        label-width="120px"
       >
-        <el-form-item label="名称">
-          <el-input v-model="addform.name" />
-        </el-form-item>
         <el-form-item label="上级">
           <el-select
             v-model="addform.pid"
@@ -164,18 +160,80 @@
               value="0"
             />
             <el-option
-              v-for="item in navbar_list"
+              v-for="item in list"
+              :key="item.id"
+              :label="item.navbar_name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="是否显示">
+          <el-select
+            v-model="addform.show"
+            placeholder="是否显示"
+          >
+            <el-option
+              label="显示"
+              :value="1"
+            />
+            <el-option
+              label="隐藏"
+              :value="0"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="是否新窗口打开">
+          <el-select v-model="addform.new_tab">
+            <el-option
+              label="新窗口打开"
+              :value="1"
+            />
+            <el-option
+              label="本页面打开"
+              :value="0"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="栏目类型">
+          <el-select
+            v-model="addform.type"
+          >
+            <el-option
+              label="系统栏目"
+              :value="1"
+            />
+            <el-option
+              label="网址链接"
+              :value="2"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="栏目地址">
+          <el-select
+            v-if="addform.type === 1"
+            v-model="addform.type_id"
+            placeholder="请选择栏目地址"
+          >
+            <el-option
+              v-for="item in category_list"
               :key="item.id"
               :label="item.name"
               :value="item.id"
             />
           </el-select>
+          <el-input
+            v-if="addform.type === 2"
+            v-model="addform.url"
+          />
         </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="addform.description" />
+
+        <el-form-item label="导航栏名称">
+          <el-input v-model="addform.navbar_name" />
         </el-form-item>
-        <el-form-item label="别名">
-          <el-input v-model="addform.alias" />
+        <el-form-item label="导航栏图标">
+          <el-input v-model="addform.navbar_icon" />
         </el-form-item>
       </el-form>
       <span
@@ -190,23 +248,47 @@
       </span>
     </el-dialog>
 
+    <!-- 编辑导航 -->
+    <el-dialog
+      title="编辑导航"
+      :visible.sync="editFormDialogVisible"
+      width="30%"
+      center
+    >
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="editFormDialogVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="editData"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import Sortable from 'sortablejs'
+import { getCategory } from '@/api/category'
 import { getNavbar, NavbarSort, addNavbar, deleteNavbar, editNavbar } from '@/api/navbar'
 export default {
   data() {
     return {
       addFormDialogVisible: false,
       editFormDialogVisible: false,
-      navbar_list: [],
+      category_list: [],
       addform: {
-        name: undefined,
         pid: undefined,
-        description: undefined,
-        alias: undefined
+        show: 1,
+        new_tab: 1,
+        type: undefined,
+        type_id: undefined,
+        url: undefined,
+        navbar_name: undefined,
+        navbar_icon: undefined
       },
       editForm: {
         id: undefined,
@@ -231,6 +313,12 @@ export default {
           this.list = res.data
           this.oldList = this.list.map(v => v.id)
           this.newList = this.oldList.slice()
+        }
+      })
+      getCategory().then(res => {
+        if (res.code === 200) {
+          this.category_list = res.data
+          this.tableData = res.data
         }
       })
       this.$nextTick(() => {
@@ -266,6 +354,27 @@ export default {
     },
     addData() {
 
+    },
+    // 获取编辑模态框
+    getEditModal(data) {
+      this.editForm.id = data.id
+      this.editForm.name = data.name
+      this.editForm.pid = data.pid
+      this.editForm.description = data.description
+      this.editForm.alias = data.alias
+      this.editFormDialogVisible = true
+    },
+    // 提交编辑的数据
+    editData() {
+      editNavbar(this.editForm).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.message)
+          this.editFormDialogVisible = false
+          this.getData()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     }
   }
 }
