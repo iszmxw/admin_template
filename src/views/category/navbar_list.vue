@@ -120,7 +120,10 @@
               type="primary"
               @click="getEditModal(scope.row)"
             >编辑</el-button>
-            <el-button type="danger">删除</el-button>
+            <el-button
+              type="danger"
+              @click="deleteData(scope.row.id)"
+            >删除</el-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -197,9 +200,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="栏目类型">
-          <el-select
-            v-model="addform.type"
-          >
+          <el-select v-model="addform.type">
             <el-option
               label="系统栏目"
               :value="1"
@@ -210,9 +211,11 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="栏目地址">
+        <el-form-item
+          v-if="addform.type === 1"
+          label="栏目地址"
+        >
           <el-select
-            v-if="addform.type === 1"
             v-model="addform.type_id"
             placeholder="请选择栏目地址"
           >
@@ -223,12 +226,13 @@
               :value="item.id"
             />
           </el-select>
-          <el-input
-            v-if="addform.type === 2"
-            v-model="addform.url"
-          />
         </el-form-item>
-
+        <el-form-item
+          v-if="addform.type === 2"
+          label="栏目地址"
+        >
+          <el-input v-model="addform.url" />
+        </el-form-item>
         <el-form-item label="导航栏名称">
           <el-input v-model="addform.navbar_name" />
         </el-form-item>
@@ -353,7 +357,45 @@ export default {
       })
     },
     addData() {
-
+      addNavbar(this.addform).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.message)
+          this.addFormDialogVisible = false
+          this.getData()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    // 删除导航栏
+    deleteData(id) {
+      this.$confirm('确定要删除了吗, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteNavbar({
+          id: id
+        }).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              type: 'success',
+              message: res.message
+            })
+            this.getData()
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.message
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     // 获取编辑模态框
     getEditModal(data) {

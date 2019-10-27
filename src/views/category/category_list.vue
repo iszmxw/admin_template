@@ -228,6 +228,7 @@ export default {
         }
       })
     },
+    // 删除栏目
     deleteData(id) {
       this.$confirm('确定要删除了吗, 是否继续?', '提示', {
         confirmButtonText: '确定',
